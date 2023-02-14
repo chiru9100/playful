@@ -1,0 +1,33 @@
+.lgc-bg {
+    background-color: rgb(242, 242, 242);
+}
+.highlightButtonColor {
+    background-color: #4CAF50 !important;
+}
+.highlightButtonColor1 {
+    background-color: #4CAF50 !important;
+}
+.highlightButton {
+    
+    padding-left: 0px;
+    padding-right: 0px
+}
+
+/* slds-file-selector__button slds-button slds-button_neutral */
+/*  */
+
+/* DROP-026 */
+.objectSearch {
+    width: 50vh !important;
+}
+
+.upload-div {
+    width: 80%;
+    max-width: 80rem;
+}
+
+.centerSpinner {
+    height: 15%;
+    width: 15%;
+    display: block;
+}

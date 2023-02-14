@@ -1,0 +1,31 @@
+.lgc-bg {
+    background-color: rgb(242, 242, 242);
+}
+.highlightButtonColor {
+    background-color: #4CAF50 !important;
+}
+.highlightButtonColor1 {
+    background-color: #4CAF50 !important;
+}
+.highlightButton {
+    
+    padding-left: 0px;
+    padding-right: 0px
+}
+.slds-modal__container {
+    width:  60% !important;
+    max-width: 60% !important;
+}
+.slds-hint-parent{
+    width: 5px;
+}
+.my-icon {
+    --sds-c-icon-color-foreground-default: orange;
+    --sds-c-icon-color-background: gray;
+}
+/* .redColor{
+    fill :#0176D3;
+} */
+
+/* slds-file-selector__button slds-button slds-button_neutral */
+/*  */

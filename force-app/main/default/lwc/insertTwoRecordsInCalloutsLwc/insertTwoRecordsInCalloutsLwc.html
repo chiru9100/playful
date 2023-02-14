@@ -1,0 +1,11 @@
+<template>
+    <lightning-card title ="insert contacts in both orgs">
+        <lightning-input class="slds-p-around_small" label ="Enter FirstName" required onchange={firstNameHandler}></lightning-input>
+        <lightning-input class="slds-p-around_small" label ="Enter LastName" required onchange={lastNameHandler}></lightning-input>
+        <lightning-input class="slds-p-around_small" label ="Enter Phone" required onchange={phoneHandler}></lightning-input>
+        <lightning-input class="slds-p-around_small" label ="Enter Email" required onchange={emailHandler}></lightning-input>
+        <lightning-button class="slds-p-around_small"  label="click to integrate" variant="brand" onclick={integrateHandker}></lightning-button>
+
+    </lightning-card>
+    
+</template>

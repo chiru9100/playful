@@ -1,0 +1,128 @@
+<template>
+    <lightning-card title="bulk search the records">
+        <lightning-layout multiple-rows="true" vertical-align="end">
+            <lightning-layout-item size="4" padding="around-small">
+
+                <lightning-textarea label="enter search value per line:" onchange={handleChange} value={serchedValue}
+                    required></lightning-textarea>
+
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout>
+            <lightning-layout-item size="3" padding="around-small">
+                <lightning-button label="search" onclick={handleSearch} variant="brand"></lightning-button>
+                <lightning-button label="search and open" onclick={handleSearch} variant="brand"
+                    class="slds-m-left_medium"></lightning-button>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="5" padding="around-small">
+                <h1>number of tabs to open per batch: <input type="text" onchange={tabHandler} value={tabValue}></h1>
+            </lightning-layout-item>
+
+
+        </lightning-layout>
+        
+                    <!-- <template if:true={listOfAccObj}> -->
+                        <!-- <div style="height: 250px;"> -->
+                            <lightning-datatable
+                                key-field="employeeId"
+                                data={records}
+                                columns={columns}>
+                            </lightning-datatable>
+                        <!-- </div> -->
+                    <!-- </template> -->
+                    
+                
+
+        <!-- <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead> 
+                <tr class="slds-line-height_reset licenseTable-tr" >
+                    <template for:each={labels} for:item='colum'>
+                        <th key={colum}>
+                            <div>{colum}</div>
+                        </th>
+                    </template>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={listOfAccObj} for:item="item">
+                    <tr key={item.Id}>
+                        <template for:each={label} for:item="colum">
+                            <td key ={colum}>
+                                <div>{colum}</div>
+                            </td>
+                        </template>
+                        <! <template for:each={fields} for:item='colum'>
+                            <td key ={colum}>
+                                <div>{item.colum}</div>
+                            </td>
+                        </template> -->
+                    <!-- </tr>
+                </template>
+            </tbody>
+        </table> --> 
+            
+
+        <!-- <template if:true={listOfAccObj}>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate"> -->
+                            <!-- <lightning-input onchange={allSelected} type="checkbox"></lightning-input> -->
+                            <!-- </div> -->
+                        <!-- </th>
+
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Name">Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Phone">Phone</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Last Name">Website</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Last Name">BillingCity</div>
+                        </th>
+
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <template for:each={listOfAccObj} for:item="acc">
+                        <tr key={acc.Id}>
+
+                            <th scope="col">
+                                <div>
+                                    <lightning-input type="checkbox" value={acc.Name}
+                                        data-id={acc.Id}></lightning-input>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div>{acc.Name}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{acc.Phone}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{acc.Website}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{acc.BillingCity}</div>
+                            </th>
+
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+        </template> --> 
+
+
+
+    </lightning-card>
+
+</template>

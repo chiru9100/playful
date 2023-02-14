@@ -1,0 +1,239 @@
+<template>
+	<div class="slds-m-top_medium slds-m-bottom_x-large slds-p-around_xx-small" style="background-color: white;">
+		<h2 class="slds-text-heading_medium slds-m-bottom_medium">
+			{csvHeaderLabel}
+		</h2>
+		
+		<!-- DROP-026 to DROP-029 -->
+		<div>
+			<lightning-combobox class="tempBox" style="width: 70%;" label="Select a template" placeholder="Select Upload Template..." options={getUploadApps} onchange={selectCsvApplicationLabel} required></lightning-combobox>
+			<lightning-input if:true={showDownloadDataCheckbox} type="checkbox" label="Include Data" data-name='IncludeData' name="IncludeData" checked={includeData}></lightning-input>
+			<a onclick={downloadtemplateCSV}>Download Template</a>
+
+			<div class="slds-p-around_xxx-small lgc-bg">
+				<lightning-input type="file" label="Upload Data" data-id="fileUploader" onchange={handleFileUpload} multiple ></lightning-input>
+		   	</div>
+		   	<div class="slds-p-around_xxx-small lgc-bg" if:true={recordContext}>
+				<lightning-input type="file" label="Upload Content" onchange={handleContentFileUpload} multiple></lightning-input>
+			</div>
+		</div>
+		
+        <template if:true={showModalPopup}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Please Select Document Type</h2>
+                    </header>
+
+                    <div class="slds-modal__content">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset slds-border_left">
+                                    <th class="" scope="col" style="width: 50%;">
+                                        <div class="slds-truncate" title="File Name">File Name</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Document Type">Document Type</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template if:true={uploadedFileNames}>
+                                    <template for:each={uploadedFileNames} for:item="files">
+                                        <tr key={files.id} class="slds-hint-parent" >
+                                            <td data-label="family" class="slds-cell-wrap" style="width: 22%; max-width:20rem;">
+                                                {files.Name}
+                                            </td>        
+                                            <td data-label="family" >
+                                                <div class="" >
+                                                    <lightning-combobox name="chooseOne" data-name='chooseOne' data-id={files.id} label="Which document is this?" value={clearDocumentType} placeholder="choose one..." options={selectDocumentTypeOptions} onchange={handleChange} required></lightning-combobox>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                        <button if:false={ShowProgressResult} class="slds-button slds-button_text-destructive" onclick={closeModal}>Cancel</button>
+                        <button if:true={ShowProgressResult} class="slds-button slds-button_neutral" onclick={closeModal}> Close</button>
+
+                        <lightning-button if:false={ShowProgressResult} variant="brand" label="Upload" title="Upload" onclick={handleUploadFiles} class="slds-p-around_xx-small" ></lightning-button>
+                    
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <div if:true={ShowProgressResult} class="slds-modal__content slds-p-around_small">
+            <div if:true={ShowProgressBar} style="padding-top: 8px;padding-bottom: 8px;">
+                <span>Uploaded File: {fileName}</span><br />
+                <span>Upload Status: {ShowProgressValue}%</span>
+                <lightning-progress-bar value={ShowProgressValue} size="large" variant="circular">
+                </lightning-progress-bar>
+            </div>
+            <div if:true={showDownloadOption}>
+                <span>Download result as CSV file</span>
+            </div>
+            <div if:true={showDownloadOption} class="">
+                <button class="slds-button slds-button_success" if:true={successCSVText}  label="Success Records" onclick={downloadSuccessCSV}>View Success Records</button>
+                <button class="slds-button slds-button_destructive" label="Error Records" onclick={downloadErrorCSV}>View Error Records</button>
+                <button class="slds-button slds-button_brand" onclick={closeModal} title="Done">Done</button>
+            </div>
+        </div>
+	</div>
+
+	<!-- DROP-026 -->
+	<!-- Template Upload -->
+	<template if:true={openUploadTemplate}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container upload-div">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeUploadTemplate}> 	 
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate"><strong>New Data Upload Template</strong></h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                    <div id="lookup-pill" class="slds-pill-container slds-align_absolute-center" if:true={isValue}>
+                        <lightning-pill class="pillSize" label={objValue} name={objValue} onremove={handleRemovePill} href={href}>
+                            <lightning-icon icon-name={iconName} size="large" alternative-text="object icon" ></lightning-icon>
+                        </lightning-pill>
+                    </div>
+                    <div class="slds-p-bottom_xx-small" if:false={isValue}>
+                        <lightning-input type="search" class="slds-align_absolute-center objectSearch objInput" placeholder="Select object..." autocomplete="off" id="obj-input-id"	required
+                                        disabled={disObjInput} value={objValue} label="To which object would you like to upload data?"  onblur={handleInputBlur} onclick={handleInputClick} onchange={handleInputChange}></lightning-input>						
+                    </div>
+                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid objectSearch" role="listbox" if:true={isShowList}>
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template for:each={objDropDownValues} for:item="object">
+                                <li key={object.Id} onclick={onObjectSelect} data-id={object.Id} data-name={object.fieldApiName} role="presentation">
+                                    <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option">
+                                        <lightning-icon class="slds-icon slds-icon--small" icon-name={object.iconName} alternative-text="" size="small"></lightning-icon>
+                                        <span class="slds-truncate">
+                                            {object.fieldApiName}
+                                        </span>
+                                    </span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                    <lightning-layout size="12">
+                        <lightning-layout-item size="6" style="width: auto;">
+                            <lightning-input if:true={isValue} type="text" class="slds-p-around_xx-small objectSearch tempInp" label="Template Name" required></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="6">
+                            <div if:true={isValue} class="slds-p-around_xx-small">
+                                <label for="FieldSelect" class="slds-form-element__label slds-no-flex">
+                                    Which field should be used to link this data to parent {parentObj}?
+                                </label>
+                                <lightning-combobox variant="label-hidden" id="FieldSelect" style="width:70%;" name="lookUpPickList" placeholder="select field..." value={lookUpValue} options={lookUpOptions} onchange={handleSelectLookup}></lightning-combobox>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" aria-multiselectable="true" role="grid" if:true={showTable}>
+						<thead>
+							<tr class="slds-line-height_reset">
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Column Name">Column Name</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Field Label">Field Label</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Field API Name">Field Api Name</div>
+								</th>
+								<th class="" scope="col">
+									<div class="slds-truncate" title="Required">Required</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<template for:each={tableData} for:item="item">
+								<tr key={item.column}>
+									<th scope="col">
+										<div style="font-size:larger">{item.column}</div>
+									</th>
+									<th scope="col">
+                                        <lightning-input variant="label-hidden" type="search" value={item.inpVal} data-id={item.column} onclick={handleFieldInputClick} onchange={handleFieldInputChange} onblur={hanldeFieldInputBlur} placeholder="search fields..." autocomplete="off"></lightning-input>
+                                        <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={item.showFields}>
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                <template for:each={fieldDropDown} for:item="field">
+                                                    <li key={field.label} onclick={onFieldSelect} data-id={item.column} data-name={field.label} role="presentation">
+                                                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option">
+                                                            <span class="slds-truncate">{field.label}</span>
+                                                        </span>
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </div>
+									</th>
+									<th scope="col">
+										<div style="font-size:larger">{item.field}</div>
+									</th>
+									<th scope="col">
+										<lightning-input type="checkbox" data-id={item.column} value="" onchange={handleRequired}></lightning-input>
+									</th>
+								</tr>
+							</template>
+						</tbody>
+					</table>
+				</div>
+				<footer class="slds-modal__footer" style="text-align:center;">
+					<button class="slds-button slds-button_brand" title="Save Record" onclick={handleCreateMetadata} if:true={showBtn}>Save</button>
+					<button class="slds-button slds-button_text-destructive" title="Close" onclick={closeUploadTemplate}>Close</button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+    
+    <template if:true={fileUploaded}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Upload Files</h2>
+                </header>
+                <div class="slds-modal__content">
+                    <template for:each={uploadedFiles} for:item="file">
+                        <div class="" key={file.fileName}>
+                            <lightning-pill label={file.fileName}></lightning-pill> 
+                            <hr class="progressBar" style={progress}></hr>
+                        </div>
+                    </template>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={closeModal}>Done</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+	<template if:true={loadSpinner}>
+			<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+				<div class="slds-modal__container">
+					<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+						<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-12">
+							<p class="slds-align_absolute-center">Just a moment while we create your new template...</p>
+							<img src="https://media.tenor.com/5o2p0tH5LFQAAAAi/hug.gif" class="centerSpinner slds-align_absolute-center">
+						</div>
+					</div>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>

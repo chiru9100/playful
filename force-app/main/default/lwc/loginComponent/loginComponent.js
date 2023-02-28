@@ -16,6 +16,7 @@ export default class LoginComponent extends LightningElement {
         meta.setAttribute("name", "viewport");
         meta.setAttribute("content", "width=device-width, initial-scale=1.0");
         document.getElementsByTagName('head')[0].appendChild(meta);
+        console.log('kakakak');
     }
 
     handleUserNameChange(event){

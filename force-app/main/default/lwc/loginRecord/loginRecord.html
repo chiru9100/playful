@@ -1,0 +1,32 @@
+<template>
+<template if:true={openLoginForm}> 
+<!-- <lightning-card title="login form"> -->
+        
+    <div class="slds-m-around_small slds-size_1-of-8">
+    <span style="display: inline-block; margin-right:10px;"><img src={w3webSlider1}></span>
+    </div>
+          <lightning-input label ="user name" onchange={userHandler} class="slds-p-around_small"></lightning-input>
+            <lightning-input label ="password" onchange={passwordHandler} class="slds-p-around_small"></lightning-input>
+            <lightning-button label="login" onclick ={loginHandler} variant="brand" class="slds-p-around_small"></lightning-button>
+
+            <lightning-button label="forgot Your Password?" variant="brand" onclick={forgotPasswordHandler} ></lightning-button>
+            <lightning-button label="Register" onclick={registerHandler}></lightning-button>
+            <p style ="  color: red">{emailError}</p>
+
+<!-- </lightning-card> -->
+</template>
+<template if:true={isChildOpen}>
+<c-register-form ></c-register-form>
+
+</template>
+<template if:true={isresetPasswordOpen}>
+    <c-reset-password  email= {username} onpasswordvaluechange={passwordValueChange1} ></c-reset-password>
+    
+    </template>
+    <template if:true={isloginSucess}>
+        <c-login-sucess ></c-login-sucess>
+        
+        </template>
+    
+
+</template>

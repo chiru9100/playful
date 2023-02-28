@@ -1,0 +1,20 @@
+<template>
+    <template if:true={openRegister}> 
+        <lightning-input   label ="First Name" onchange={firstNameEvent} required  class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="Last Name" onchange={lastNameEvent} required  class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="Email " onchange={emailEvent}  class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="Phone " onchange={phoneEvent} required  class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="Password " onchange={passwordEvent} required  class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="Company " onchange={companyEvent} required class="slds-p-around_small"></lightning-input>
+        <lightning-input label ="user Name " onchange={userEventHandler} required class="slds-p-around_small"></lightning-input>
+
+           <p style ="  color: red">{emailError1}</p>
+        <lightning-button label ="submit" class="slds-p-around_small" onclick ={handleSubmit}></lightning-button>
+        
+</template>
+<template if:true={isParentOpen}>
+    <c-login-record ></c-login-record>
+    
+    </template>
+    
+ </template> 

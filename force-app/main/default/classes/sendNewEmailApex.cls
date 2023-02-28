@@ -7,12 +7,9 @@ public with sharing class sendNewEmailApex {
     }
     @AuraEnabled(cacheable=true)
     public static List<EmailTemplate> getEmailTemplate(String selectedFolder){
-        System.debug('selectedFolder'+selectedFolder);
-        List<EmailTemplate> et = [SELECT Id,Name  FROM EmailTemplate WHERE Folder.Id=:selectedFolder];
+       
 
-        System.debug('et'+et);
-
-         return et;
+         return [SELECT Id,Name  FROM EmailTemplate WHERE Folder.Id=:selectedFolder];
 
     }
     @AuraEnabled(cacheable=true)
